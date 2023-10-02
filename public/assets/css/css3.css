@@ -1,0 +1,163 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+h1 {
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 10px 0;
+    font-size: 36px;
+    margin-top: 0px;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.inputs label {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.inputs input[type='number'],
+.inputs input[type='text'] {
+    width: 103%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #000;
+    background-color: #fff;
+    text-align: center;
+}
+
+.inputs input[type='number']:focus,
+.inputs input[type='text']:focus {
+    outline: none;
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background-color: #388e3c;
+}
+
+.chart {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#output {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+    color: #000;
+    font-weight: bold;
+}
+
+#chart-container {
+    width: fit-content;
+    max-width: 350px;
+    height: fit-content;
+    max-height: 600px;
+    position: relative;
+}
+
+#chart {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+/* Animations */
+.container::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
+    animation: slide-in 2s ease-in-out forwards;
+}
+
+.chart canvas {
+    opacity: 0;
+    animation: fade-in 1s ease-in-out forwards;
+    animation-delay: 1s;
+    margin: 50px;
+    /* transform: rotate(90deg); */
+}
+
+@keyframes slide-in {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+#background-video {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    object-fit: cover;
+    left: 0;
+}

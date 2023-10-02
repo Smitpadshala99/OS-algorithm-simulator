@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="assets/css/css1.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="assets/css/scrolltop.css">
+    <video autoplay loop muted id="background-video" style="margin: auto;">
+        <!-- Add additional video sources for different formats here -->
+        <source src="assets/imgs/FCFS.mp4" type="video/mp4">
+    </video>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-md-6">
+            <!-- This is a button to go to the homepage -->
+            <button class="btn-primary" style="position: absolute; left: 25px; top: 10px;">
+                <a href="index.html" style="color: #fff; font-weight: 500; ">Home</a>
+            </button>
+        </div>
+        <div class="col-md-6">
+            <!-- This is a button to go to the read page -->
+            <button class="btn-primary" style="position: absolute; right: 25px; top: 10px;">
+                <a href="priority.html" style="color: #fff; font-weight: 500; ">Read</a>
+            </button>
+        </div>
+    </div><br><br>
+
+    <!-- Heading for the page -->
+    <center>
+        <h1 class="text-center my-5 futuristic-title" style="position: auto;">Preemptive Priority CPU Scheduling</h1>
+    </center>
+
+    <!-- Table to display the processes -->
+    <center>
+        <table id="processTable" class="table">
+            <thead>
+                <tr>
+                    <th>Process_ID</th>
+                    <th>Arrival Time</th>
+                    <th>CPU Burst Time</th>
+                    <th>Priority</th>
+                </tr>
+            </thead>
+        </table>
+    </center>
+    <br>
+
+    <!-- Input fields for process information -->
+    <center>
+        <br>
+        <input type="text" id="processIDInput" placeholder="Process ID" value="P1">
+        <input type="number" id="arrivalTimeInput" placeholder="Arrival Time" min="0" step="1" value="0">
+        <input type="number" id="cpuBurstTimeInput" placeholder="CPU Burst Time" min="1" step="1" value="1">
+        <input type="number" id="priorityInput" placeholder="Priority" min="0" step="1" value="1">
+    </center>
+
+    <!-- Buttons to add, drop and calculate processes -->
+    <br><br>
+    <center>
+        <button id="addButton">Add Process</button>
+        <button id="dropButton">Drop Process</button>
+    </center>
+    <br><br>
+    <center>
+        <button id="calculateButton">Calculate</button>
+        <button type="resetbutton" id="reset" onClick="window.location.reload();">Reset</button>
+    </center>
+
+    <!-- Table to display process details -->
+    <br><br><br>
+    <center>
+        <table id="resultTable" class="table" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Process_ID</th>
+                    <th>Arrival Time</th>
+                    <th>CPU Burst Time</th>
+                    <th>Priority</th>
+                    <th>Completion Time</th>
+                    <th>Turnaround Time</th>
+                    <th>Waiting Time</th>
+                    <th>Response Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="resultTableRows">
+                </tr>
+            </tbody>
+        </table>
+    </center>
+
+    <!--Showing the average computed tat, wt and rt here after calculation-->
+    <br><br>
+    <center>
+        <div id="computed-result" style="font-weight: bold; font-size: 20px;">
+            <h5></h5>
+        </div>
+    </center>
+    <br>
+    <br>
+    <!--Gantt chart after calculation-->
+    <center>
+        <div id="ganttChartHeading" style="font-weight: bolder; font-size: 20px;"></div><br>
+        <div style="width: fit-content;">
+        <div class="grid-process-container" id="process-blocks"></div>
+        <div class="grid-time-container" id="process-times"></div>
+        </div>
+    </center>
+    <!-- scroll top button -->
+    <div class="scroll-top-wrapper ">
+        <span class="scroll-top-inner">
+            <i class="fa fa-2x fa-arrow-circle-up"></i>
+        </span>
+    </div>
+    <script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="assets/js/scrolltop.js"></script>
+</body>
+
+</html>
+<script>
+    // creating references of the elements of html file to work on them
+    const processTable = document.getElementById("processTable");
+    const processIDInput = document.getElementById("processIDInput");
+    const arrivalTimeInput = document.getElementById("arrivalTimeInput");
+    const cpuBurstTimeInput = document.getElementById("cpuBurstTimeInput");
+    const priorityInput = document.getElementById("priorityInput");
+    const addButton = document.getElementById("addButton");
+    const dropButton = document.getElementById("dropButton");
+    const calculateButton = document.getElementById("calculateButton");
+    const resultTable = document.getElementById("resultTable");
+    let ganttChartBlock = document.getElementById("process-blocks");
+    let ganttChartTime = document.getElementById("process-times");
+
+    // Function to refresh the old table and values when the calculate button is clicked again
+    function reset() {
+        // start from time equal to zero for recalculation
+        current_time = 0;
+        // Get the rows of the Table resultTable except Heading
+        const rows = resultTable.querySelectorAll('tr:not(:first-child)');
+        // Loop through each row and deleting each one
+        rows.forEach((row) => {
+            row.remove();
+        });
+
+        // clear the Gantt Chart
+        ganttChartBlock.innerHTML = "";
+        ganttChartTime.innerHTML = "";
+        document.getElementById("ganttChartHeading").innerHTML = "";
+    }
+
+    // function to check if process_id already given to an process or not
+    function pidCheck(process_id) {
+        for (let i = 0; i < processes.length; i++) {
+            if (process_id === processes[i].process_id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Array to store the processes
+    let processes = [];
+    // processCounter to show default value of Pid while taking inputs
+    let processCounter = 1;
+
+    // Adding the at, bt and priority to the processTable from the inputs
+    addButton.addEventListener("click", function () {
+        // Generate the process ID
+        const process_id = processIDInput.value;
+        // Getting the values of at, bt and priority from inputs and storing in respective variables
+        const arrival_time = arrivalTimeInput.value;
+        const burst_time = cpuBurstTimeInput.value;
+        const priority = priorityInput.value;
+        // Check if any of the inputs are empty
+        if (process_id === "" || arrival_time === "" || burst_time === "" || priority === "") {
+            alert("All fields are required!");
+            return;
+        }
+        // Check if the inputs are numeric or not
+        else if (isNaN(arrival_time) || isNaN(burst_time) || isNaN(priority)) {
+            alert("Input values must be numeric");
+        }
+        // Check if the bt of process is zero or not
+        else if (burst_time == 0) {
+            alert("Burst can't be Zero");
+            return;
+        }
+        // Check if the PID already exists
+        else if (pidCheck(process_id)) {
+            alert("Process with same process_id already exist");
+            processCounter--;
+            return
+        }
+        // Add the process to the processes array 
+        processes.push({
+            process_id,
+            arrival_time: parseFloat(arrival_time),
+            burst_time: parseFloat(burst_time),
+            priority: parseFloat(priority)
+        });
+
+        // Add the process to the process table
+        // Creating the row for inserting values of process in processTable
+        const row = processTable.insertRow();
+        const processIDCell = row.insertCell(0);
+        const arrivalTimeCell = row.insertCell(1);
+        const cpuBurstTimeCell = row.insertCell(2);
+        const priorityCell = row.insertCell(3);
+        // Adding the values to the processTable
+        processIDCell.innerHTML = process_id;
+        arrivalTimeCell.innerHTML = arrival_time;
+        cpuBurstTimeCell.innerHTML = burst_time;
+        priorityCell.innerHTML = priority;
+        // Giving color to each process
+        // The Math.random() function generates a random number between 0 (inclusive) and 1 (exclusive).
+        while (true) {
+            const r = Math.floor(Math.random() * 256); // generate random R value between 0 and 255
+            const g = Math.floor(Math.random() * 256); // generate random G value between 0 and 255
+            const b = Math.floor(Math.random() * 256); // generate random B value between 0 and 255
+            const a = (Math.floor(Math.random() * 10) + 1) / 10; // generate random alpha value between 0.1 and 1.0 i.e. excluding 0
+            const color = `rgba(${r},${g},${b},${a})`; // construct the color string in rgba() format
+            if (a === 1 && color !== 'rgba(255,255,255,1)') { // including fully opaque colors and colors with white shades
+                row.style.backgroundColor = color;
+                break;
+            }
+        }
+        // Clear the inputs to respictive values
+        processIDInput.value = `P${++processCounter}`;
+        arrivalTimeInput.value = "0";
+        cpuBurstTimeInput.value = "1";
+        priorityInput.value = "1";
+    });
+
+    // Drop process event listener
+    dropButton.addEventListener("click", function () {
+        // Get the process ID from the input
+        const process_id = processIDInput.value;
+
+        // Check if the process ID input is empty and Show an alert if the process ID input is empty
+        if (process_id === "") {
+            alert("Enter a Process ID to drop!");
+            return;
+        }
+
+        // Find the index of the process to be removed from the processes array
+        const indexToRemove = processes.findIndex(process => process.process_id === process_id);
+
+        // Check if the process is not found in the processes array and Show an alert if the process is not found
+        if (indexToRemove === -1) {
+            alert("Process not found!");
+            return;
+        }
+
+        // Remove the process from the processes array
+        processes.splice(indexToRemove, 1);
+
+        // Delete the row from the process table
+        let indexToDelete = -1;
+        for (let i = 1; i < processTable.rows.length; i++) {
+            if (processTable.rows[i].cells[0].innerHTML === process_id) {
+                indexToDelete = i;
+                break;
+            }
+        }
+        if (indexToDelete !== -1) {
+            processTable.deleteRow(indexToDelete);
+        }
+
+        // Reset the deleted process_id inputs
+        processIDInput.value = `P${processCounter}`;
+        arrivalTimeInput.value = "0";
+        cpuBurstTimeInput.value = "1";
+        priorityInput.value = "1";
+    });
+
+    // logic
+    // Event listener for the calculate button
+    calculateButton.addEventListener("click", function () {
+        // calling reset function to refresh value
+        reset();
+        // Check if there are any processes to calculate and Show an alert if the process is not found
+        if (processes.length === 0) {
+            alert("Add some processes first!");
+            return;
+        }
+
+        // Display the result table from display: none
+        resultTable.style.display = "";
+        // Call the calculatePreemptivePriorityCPU function with the processes array as input and store the computed result in result array
+        const result = calculatePreemptivePriorityCPU(processes);
+
+        // Populate the result table with the results
+        let i = 0; //variable to get the color of processes from processTable
+        result.forEach(process => {
+            // insert the row with required resultTable schema
+            const row = resultTable.insertRow();
+            const processIDCell = row.insertCell(0);
+            const arrivalTimeCell = row.insertCell(1);
+            const cpuBurstTimeCell = row.insertCell(2);
+            const priorityCell = row.insertCell(3);
+            const completionTimeCell = row.insertCell(4);
+            const turnaroundTimeCell = row.insertCell(5);
+            const waitingTimeCell = row.insertCell(6);
+            const responseTimeCell = row.insertCell(7);
+
+            // getting the color o f process from the processTable and giving the process in resultTable same color
+            const colorRow = processTable.rows[++i];
+            const color = window.getComputedStyle(colorRow).backgroundColor;
+            row.style.backgroundColor = color;
+
+            // send calculated result values into the table
+            processIDCell.innerHTML = process.process_id;
+            arrivalTimeCell.innerHTML = process.arrival_time;
+            cpuBurstTimeCell.innerHTML = process.burst_time;
+            priorityCell.innerHTML = process.priority;
+            completionTimeCell.innerHTML = process.completionTime;
+            turnaroundTimeCell.innerHTML = process.turnaroundTime;
+            waitingTimeCell.innerHTML = process.waitingTime;
+            responseTimeCell.innerHTML = process.responseTime;
+        });
+
+        // calcuating the average values of wt, tat and rt
+        let awt = 0;
+        let atat = 0;
+        let art = 0;
+        for (let index = 0; index < processes.length; index++) {
+            awt = awt + (+processes[index].waitingTime);
+            atat = atat + (+processes[index].turnaroundTime);
+            art = art + (+processes[index].responseTime);
+        }
+        awt = (awt/processes.length).toFixed(2);
+        atat = (atat/processes.length).toFixed(2);
+        art = (art/ processes.length).toFixed(2);
+        // printing on table average values
+        let str = `AVERAGE WAITING TIME:${+awt}<br><br>
+            AVERAGE TURNAROUND TIME: ${+atat}<br><br>
+            AVERAGE RESPONSE TIME: ${+art}`;
+        let computed_avg_results = document.getElementById("computed-result");
+        computed_avg_results.innerHTML = str;
+
+        // send the processes array to server to store in mysql table
+        fetch("/endpoint1", {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ processes }),
+        }).catch((error) => {
+            console.error('Error:', error);
+        });
+        // after calculation and forming table & gantt chart auto scroll to bottom of page
+        window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth'
+        });
+    });
+
+    // current time of the system
+    let current_time = 0;
+
+    // function to create a block of process in gantt chart
+    function ganttChart(index) {
+        let gridItem = document.createElement("div");
+        gridItem.classList.add("grid-process-container");
+        gridItem.innerHTML = processes[index].process_id;
+        ganttChartBlock.appendChild(gridItem);
+
+        const row = processTable.rows[index + 1];
+        const color = window.getComputedStyle(row).backgroundColor;
+        gridItem.style.backgroundColor = color;
+        let gridItem2 = document.createElement("div");
+
+        gridItem2.innerHTML = current_time.toFixed(2);
+        gridItem2.classList.add("grid-item");
+        ganttChartTime.append(gridItem2);
+    }
+
+    // function to 
+    function calculatePreemptivePriorityCPU(processes) {
+        document.getElementById("ganttChartHeading").innerHTML = `GANTT CHART`;
+        // number of processes
+        const n = processes.length;
+        // array to store remaining burst time for each process
+        let remaining_burst_time = new Array(n).fill(0);
+        // initialize the remaining_burst_time array with the CPU burst time of each process i.e. remaining_burst_time[] = burst_time
+        for (let i = 0; i < n; i++) {
+            remaining_burst_time[i] = processes[i].burst_time;
+        }
+
+        // creating an sorted_arrival_time array to know when new proccess are going to arrive
+        let sorted_arrival_time = new Array(n);
+        for (let i = 0; i < n; i++) {
+            sorted_arrival_time[i] = processes[i].arrival_time;
+        }
+        sorted_arrival_time.sort(function (a, b) {
+            return a - b;
+        });
+
+        //updating the current_time to the arrival time of the process arriving 1st and making the 1st block process of the gantt chart accordingly
+        if (current_time != sorted_arrival_time[0]) {
+            let gridItem = document.createElement("div");
+            gridItem.classList.add("grid-process-container");
+            gridItem.innerHTML = `Idle`;
+            ganttChartBlock.appendChild(gridItem);
+
+            let gridItem2 = document.createElement("div");
+            let gridItem3 = document.createElement("div");
+            gridItem2.innerHTML = current_time.toFixed(2);
+            gridItem3.innerHTML = sorted_arrival_time[0].toFixed(2);
+            gridItem2.classList.add("grid-item");
+            gridItem3.classList.add("grid-item");
+            ganttChartTime.appendChild(gridItem2);
+            ganttChartTime.appendChild(gridItem3);
+            current_time = sorted_arrival_time[0];
+        }
+        else {
+            let gridItem2 = document.createElement("div");
+            let gridItem3 = document.createElement("div");
+            gridItem2.innerHTML = current_time.toFixed(2);
+            gridItem2.classList.add("grid-item");
+            ganttChartTime.appendChild(gridItem2);
+        }
+        // number of completed processes
+        let completed = 0;
+
+        // array to check if a process has entered in cpu for 1st time if yes update 0 to 1 at it's respective index
+        let is_entered = new Array(n).fill(0);
+
+        // present_processes array contains the processes which are present at a perticular time
+        let processes_present = [];
+
+        // continue the loop until all processes are completed
+        while (completed < n) {
+
+            //iterator for present_processes array
+            let j = 0
+            // find the processes present at current time
+            for (let i = 0; i < n; i++) {
+                // consider only those processes whose arrival time is less than or equal to the current time and they have not been completed
+                if (processes[i].arrival_time <= current_time && remaining_burst_time[i] != 0) {
+                    processes_present[j++] = processes[i];
+                }
+            }
+
+            // find the process with highest priority at current time out of present processes
+            let highest_priority = Math.min.apply(Math, processes_present.map(process => process.priority));
+
+            // find the index of highest priority process in array processes
+            // index of the process with highest priority at current time
+            let index = -1;
+            for (let i = 0; i < n; i++) {
+                if (processes[i].priority == highest_priority && remaining_burst_time[i] != 0 && processes_present.includes(processes[i])) {
+                    index = i;
+                    break;
+                }
+            }
+
+            // check if the process is getting response for the first time and calculate it's response time
+            if (is_entered[index] != 1) {
+                is_entered[index]++;
+                processes[index].responseTime = parseFloat((current_time - processes[index].arrival_time).toFixed(2));
+            }
+
+            // time_at_which_next_process_arrives will have the time at which the next process will arrive
+            let time_at_which_next_process_arrives = 0;
+            // finding the time_at_which_next_process_arrives
+            //or finding the next closest time of arrival of process
+            for (let i = 0; i < n; i++) {
+                if (current_time < sorted_arrival_time[i]) {
+                    time_at_which_next_process_arrives = sorted_arrival_time[i];
+                    break;
+                }
+                //if no more processes left to be arrived then time at which next process arrives = infinite
+                time_at_which_next_process_arrives = Number.MAX_SAFE_INTEGER
+            }
+
+            // checking if the process will execute or get over before the arrival of new process
+            // if it'll execute till the next process arrives
+            if (remaining_burst_time[index] > parseFloat((time_at_which_next_process_arrives - current_time).toFixed(2))) {
+                // then run the process till next process has arrived 
+                remaining_burst_time[index] = parseFloat(remaining_burst_time[index] - (time_at_which_next_process_arrives - current_time).toFixed(2));
+                // update current time
+                current_time = time_at_which_next_process_arrives;
+                console.log(processes[index].process_id);
+                ganttChart(index);
+            }
+
+            // checking if the after complete execution of process is any other process to take over present process
+            // if there are any other processes than change then complete present process and change the process
+            else if (processes_present.length != 1) {
+                // run the process till the process is over
+                current_time = current_time + remaining_burst_time[index];
+                // calculate the ct, tat and wt of the process
+                processes[index].completionTime = parseFloat(current_time.toFixed(2));
+                remaining_burst_time[index] = 0;
+                processes[index].turnaroundTime = parseFloat((processes[index].completionTime - processes[index].arrival_time).toFixed(2));
+                processes[index].waitingTime = parseFloat((processes[index].turnaroundTime - processes[index].burst_time).toFixed(2));
+                // update the completed variable
+                completed++;
+
+                ganttChart(index);
+            }
+
+            // if only one process and it executes completely and next process arrives after a while than
+            else {
+                // run the process till the process is over and calculate the ct, tat and wt
+                current_time = current_time + remaining_burst_time[index];
+                processes[index].completionTime = parseFloat(current_time.toFixed(2));
+                remaining_burst_time[index] = 0;
+                processes[index].turnaroundTime = parseFloat((processes[index].completionTime - processes[index].arrival_time).toFixed(2));
+                processes[index].waitingTime = parseFloat((processes[index].turnaroundTime - processes[index].burst_time).toFixed(2));
+                // update the completed variable
+                completed++;
+
+                ganttChart(index);
+
+                // if there is time till the next process arrives then for that time the gantt chart will show Idle state
+                if (time_at_which_next_process_arrives > current_time) {
+                    current_time = time_at_which_next_process_arrives;
+                    if (completed != n) {
+                        gridItem = document.createElement("div");
+                        gridItem.classList.add("grid-process-container");
+                        gridItem.innerHTML = `Idle`;
+                        ganttChartBlock.appendChild(gridItem);
+                        gridItem1 = document.createElement("div");
+                        gridItem2 = document.createElement("div");
+                        gridItem2.innerHTML = current_time.toFixed(2);
+                        gridItem2.classList.add("grid-item");
+                        ganttChartTime.append(gridItem2);
+                    }
+                }
+                // make the current time equal to the time at which next process arrives
+                current_time = time_at_which_next_process_arrives;
+            }
+            // reset the processes_present at current time ready to be filled again
+            processes_present = [];
+        }
+        // return the process with all time (Compilation time, Turnaround timr, Waiting time, Response time)
+        return processes;
+    }
+
+</script>

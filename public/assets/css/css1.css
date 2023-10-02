@@ -1,0 +1,170 @@
+ /* Style for the main heading of the page */
+ h1 {
+    font-size: 35px;
+    color: #090909;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Style for the table headers */
+th {
+    font-size: 18px;
+    background-color: rgba(98, 185, 231, 0.719);
+    padding: 10px;
+    border: 2px solid #060606;
+}
+
+/* Style for the table cells */
+td {
+    font-size: 16px;
+    padding: 10px;
+    background-color: transparent;
+    border: 2px solid #030303;
+    color: azure;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.inputs label {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+/* Style for the input fields */
+input[type="text"],
+input[type="number"] {
+    padding: 10px;
+    font-size: 17px;
+    font-weight: auto;
+    margin-right: 10px;
+    width: 200px;
+    border: 2px solid #000000;
+    /* block-size: auto; */
+    background-color: rgba(99, 180, 224, 0.413);
+    border-radius: 5px;
+}
+
+button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background-color: #388e3c;
+}
+
+
+/* style for the title */
+.futuristic-title {
+    font-size: 36px;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    /* text-shadow: 0 0 10px rgba(79, 193, 221, 0.61), 0 0 20px #fff, 0 0 30px #fff, 0 0 40px rgba(79, 193, 221, 0.61); */
+    text-shadow: 0 0 10px rgba(141, 221, 152, 0.61), 0 0 20px #fff, 0 0 30px #fff, 0 0 40px rgba(141, 221, 152, 0.61), 0 0 70px rgba(141, 221, 152, 0.61), 0 0 80px rgba(141, 221, 152, 0.61), 0 0 100px rgba(141, 221, 152, 0.61);
+    animation: neon;
+}
+
+/* Neon effect animation */
+@keyframes neon {
+    0% {
+        /* text-shadow: 0 0 10px rgba(79, 193, 221, 0.61), 0 0 20px #fff, 0 0 30px #fff, 0 0 40px rgba(79, 193, 221, 0.61); */
+        text-shadow: 0 0 10px rgba(141, 221, 152, 0.61), 0 0 20px #fff, 0 0 30px #fff, 0 0 40px rgba(141, 221, 152, 0.61), 0 0 70px rgba(141, 221, 152, 0.61), 0 0 80px rgba(141, 221, 152, 0.61), 0 0 100px rgba(141, 221, 152, 0.61);
+    }
+
+    100% {
+        /* text-shadow: 0 0 20px rgba(79, 193, 221, 0.61), 0 0 30px #fff, 0 0 40px #fff, 0 0 50px rgba(79, 193, 221, 0.61); */
+        text-shadow: 0 0 20px rgba(141, 221, 152, 0.61), 0 0 30px #fff, 0 0 40px #fff, 0 0 50px rgba(141, 221, 152, 0.61), 0 0 80px rgba(141, 221, 152, 0.61), 0 0 90px rgba(141, 221, 152, 0.61), 0 0 110px rgba(141, 221, 152, 0.61);
+    }
+}
+
+
+/* Style for the gantt chart time */
+.grid-time-container {
+    /* display: grid;
+    grid-template-columns: repeat(auto-fill, 100px); */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    /* grid-gap: 10px; */
+}
+
+.grid-time-container>*:first-child {
+    margin-left: 0;
+}
+
+.grid-time-container>*:last-child {
+    margin-right: 0;
+}
+
+/* Style for each gantt chart time */
+.grid-item {
+    margin: 0 43.6px;
+}
+
+/* Style for the gantt chart block */
+.grid-process-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 100px);
+    justify-content: center;
+    align-items: center;
+    /* grid-gap: 10px; */
+    /* border: 1px solid black;  */
+}
+
+.grid-process-container>div {
+    padding: 7px;
+    border: 2px solid black;
+    background-color: rgba(255, 255, 255, 0.475);
+    text-align: center;
+}
+
+.grid-process-container>div:empty {
+    visibility: hidden;
+}
+
+/* Style for the gantt chart block */
+#process-blocks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    min-width: 650px;
+    margin: 0 auto;
+    padding: 50px;
+
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#background-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}

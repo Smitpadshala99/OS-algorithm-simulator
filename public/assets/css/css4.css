@@ -1,0 +1,139 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+h1 {
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 10px 0;
+    font-size: 36px;
+    margin-top: 0px;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.inputs label {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.inputs input[type='number'],
+.inputs input[type='text'] {
+    width: 103%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #000;
+    background-color: #fff;
+    text-align: center;
+}
+
+.inputs input[type='number']:focus,
+.inputs input[type='text']:focus {
+    outline: none;
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background-color: #388e3c;
+}
+
+table {
+    margin: 0 auto;
+    border-collapse: separate;
+    border: #000;
+    margin-top: 50px;
+    margin-bottom: 25px;
+    width: 80%;
+    text-align: center;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid black;
+    font-size: 18px;
+    color: aliceblue;
+    background-color: transparent;
+}
+
+th {
+    background-color: rgba(98, 185, 231, 0.719);
+    color: black;
+}
+
+#background-video {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    object-fit: cover;
+    left: 0;
+}
+
+#op_message {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    font-weight: bold;
+    font-size: 22px;
+    color: #000000;
+}
+
+.pie-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+canvas {
+    width: 200px;
+    height: 200px;
+    transform: perspective(500px) rotateX(45deg);
+}

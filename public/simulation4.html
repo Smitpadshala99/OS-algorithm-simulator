@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Optimal Page Replacement Algorithm Simulation</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="assets/css/css4.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="assets/css/scrolltop.css">
+    <video autoplay loop muted id="background-video" style="margin: auto;">
+        <source src="assets/imgs/FCFS.mp4" type="video/mp4">
+    </video>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-md-6">
+            <!-- This is a button to go to the homepage -->
+            <button class="btn-primary" style="position: absolute; left: 25px; top: 10px;">
+                <a href="index.html" style="color: #fff; font-weight: 500; ">Home</a>
+            </button>
+        </div>
+        <div class="col-md-6">
+            <!-- This is a button to go to the read page -->
+            <button class="btn-primary" style="position: absolute; right: 25px; top: 10px;">
+                <a href="optimal.html" style="color: #fff; font-weight: 500; ">Read</a>
+            </button>
+        </div>
+    </div>
+    <div class="container">
+        <h1 class="text-center my-5 futuristic-title">Optimal Page Replacement Algorithm Simulation</h1>
+        <div class="inputs">
+            <label for="numFrames">Enter the number of frames:</label>
+            <input type="number" id="numFrames" placeholder="Enter the number of frames">
+            <label for="input_queue">Enter the page-request queue:</label>
+            <input type="text" id="input_queue" placeholder="Enter comma-separated values">
+            <button id="submit-btn" onclick="optimal()">Simulate</button>
+        </div>
+    </div>
+    <div id="output">
+        <table>
+            <thead id="heading">
+            </thead>
+            <tbody id="resultTable">
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <p id="op_message"></p>
+    </div>
+    <div class="pie-row">
+        <canvas id="pie-chart" class="pie-chart"></canvas>
+    </div>
+    
+    <!-- scroll top button -->
+    <div class="scroll-top-wrapper ">
+        <span class="scroll-top-inner">
+            <i class="fa fa-2x fa-arrow-circle-up"></i>
+        </span>
+    </div>
+
+    <script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="assets/js/scrolltop.js"></script>
+</body>
+<script>
+    // initialize variables
+    let PageFaults = 0; // counts number of page faults
+    let hit = 0; // counts number of hits
+    let pages = []; // stores all the page requests in an array
+    let pieChart;
+    // resets the value of all variables
+    function reset() {
+        PageFaults = 0;
+        hit = 0;
+        pages = [];
+        // clear the output table
+        const resultTable = document.getElementById("resultTable");
+        resultTable.innerHTML = "";
+
+        // clear the table heading
+        const heading = document.getElementById("heading");
+        heading.innerHTML = "";
+
+        //reset piechart
+        if (pieChart) {
+            pieChart.destroy();
+        }
+    }
+
+    // adds a row to the output table
+    function addrow(var1, m_h, frameArr) {
+        const row = resultTable.insertRow(-1);      // Insert row at the end of the table
+        const pageCell = row.insertCell(0);     // Insert page cell into the row
+
+        // update page fault(miss) and hit count
+        if (m_h == 0) {
+            PageFaults++;//increments the number of pagefaults 
+        }
+        else {
+            hit++;//increments the hits
+        }
+
+        // Set page cell content and styling
+        pageCell.innerHTML = var1;
+        pageCell.style.backgroundColor = "rgba(98, 185, 231, 0.719)";
+        pageCell.style.color = "black";
+
+        // Insert frame cells into the row and set their content and styling
+        for (let i = 0; i < frameArr.length; i++) {
+            const frameCell = row.insertCell(i + 1);
+            frameCell.innerHTML = frameArr[i];
+            if (frameArr[i] == var1) 
+            {
+                if (m_h == 0) {
+                    frameCell.style.backgroundColor = "red";//if m_h=0 then display the new page in red 
+                }
+                else {
+                    frameCell.style.backgroundColor = "green";//if m_h=1 then display the page in green
+                }
+            }
+        }
+
+        // Add page and frame array to the pages array
+        pages.push({
+            Page: parseInt(var1),
+            FrameArray: String(frameArr)
+        });
+
+        //animate the insertion of the row
+        row.animate(
+            [
+                { opacity: '0' },
+                { opacity: '1' }
+            ],
+            {
+                duration: 2000,
+            }
+        );
+    }
+
+    function optimal() {
+        reset();    // Reset the table
+
+        // Get input values
+        const frame = parseInt(document.getElementById("numFrames").value);
+        const queueInput = document.getElementById('input_queue').value;
+        const queue = queueInput.split(',');
+
+        // validate the input values as integers only
+        if (isNaN(frame) || frame <= 0 || !Number.isInteger(frame)) {
+            alert("Please enter a valid number of frames.");
+            return;
+        }
+        //else print an alert message
+        else if (!queueInput) {
+            alert('Please enter a valid queue.');
+            return;
+        }
+        //check for the validity of page requests 
+        for (let i = 0; i < queueInput.length; i++) {
+            if (isNaN(queueInput.charAt(i)) && (queueInput.charAt(i) !== ",")) {
+            alert("Please enter valid input values")
+            return;
+            }
+        }
+        // create header row with multiple columns
+        const tableHeading = document.getElementById("heading");
+        const headerRow = document.createElement("tr");
+        const pageHeader = document.createElement("th");
+        pageHeader.innerHTML = "Page";
+        headerRow.appendChild(pageHeader);
+        //for creating the number of frames as tableheaders/columns corresponding to the size of frameMemory
+        for (let i = 0; i < frame; i++) {
+            const frameHeader = document.createElement("th");
+            frameHeader.innerHTML = "Frame " + (i + 1);
+            headerRow.appendChild(frameHeader);
+        }
+        tableHeading.appendChild(headerRow);
+
+        //main logic code
+        const resultTable = document.getElementById("resultTable");
+        let processes = [];//array to store the frames in the Memory 
+        let farthestIndex = [];//array to store the earliest indexes of the pages present in the FrameMemory that will occur in the future
+        let flag = 0;//to indicate whether any process present in the frameMemory will  occur or not in future
+        let miss_hit = 0;
+        for (let i = 0; i < queue.length; i++) {
+            // If the process is already in the frame, mark it as a hit
+            if (processes.includes(queue[i])) {
+                console.log("HIT");
+                miss_hit = 1;
+                addrow(queue[i], miss_hit, processes);
+                continue;
+            }
+            // If there are empty frames, add the page to the frame
+            else if (processes.length < frame) {
+                // If the process is not in the frame, add it and mark it as a miss
+                processes.push(queue[i]);
+                console.log("MISS");
+                console.log(processes);
+                miss_hit = 0;
+                addrow(queue[i], miss_hit, processes);
+                continue;
+            }
+            // If the process is not in the frame, find the process with the farthest next occurrence
+            else {
+                console.log("MISS");
+                for (let j = 0; j < frame; j++) {
+
+                    farthestIndex.push(queue.indexOf(processes[j], i + 1));
+
+                    // If a process will not occur again, replace it with the current process
+                    if (farthestIndex[j] == -1) {
+                        flag = 1;
+                        processes[j] = queue[i];
+                        console.log(processes);
+                        miss_hit = 0;
+                        addrow(queue[i], miss_hit, processes);
+                        break;
+                    }
+                }
+
+                let frmIndToBeUsed;
+                let max;
+                // If all processes will occur again, replace the process with the farthest next occurrence
+                if (flag != 1) {
+                    max = farthestIndex.reduce((a, b) => Math.max(a, b), -Infinity);//reduce method is used to find the max element
+
+                    for (var z = 0; z < processes.length; z++) {
+                        if (queue[max] == processes[z]) {
+                            frmIndToBeUsed = z;
+                            break;
+                        }
+                    }
+                    processes[frmIndToBeUsed] = queue[i];
+                    console.log(processes);
+                    miss_hit = 0;
+                    addrow(queue[i], miss_hit, processes);
+                }
+            }
+            farthestIndex = [];//make farthestIndex empty for next page request's iteration
+            flag = 0;
+        }
+
+        // Update the page with the number of hits, misses, hit ratio, and miss ratio
+        var op_message = document.getElementById("op_message");
+        op_message.innerHTML = "Number of HITS: " + hit + "<br>";      // Display the number of hits 
+        op_message.innerHTML += "Number of MISSES: " + PageFaults + "<br>";     // Display the number of misses
+        let hit_ratio = ((hit).toFixed(2) / queue.length) * 100;
+        op_message.innerHTML += "HIT Ratio: " + (hit_ratio).toFixed(2) + "%<br>";    // Calculate and display the hit ratio
+        let miss_ratio = ((PageFaults).toFixed(2) / queue.length) * 100;
+        op_message.innerHTML += "MISS Ratio: " + (miss_ratio).toFixed(2) + "%<br>";      // Calculate and display the miss ratio
+
+        // Create a pie chart showing the number of hits and misses
+        pieChart = new Chart(document.getElementById("pie-chart"), {
+            type: "pie",
+            data: {
+                labels: ["Miss", "Hit"],
+                datasets: [
+                    {
+                        data: [PageFaults, hit],
+                        backgroundColor: ["#ff3333", "#2eb82e"],
+                    },
+                ],
+            },
+            options: {
+                responsive: false,
+                plugins: {
+                    // Set the legend font to bold and the color to black
+                    legend: {
+                        labels: {
+                            fontStyle: 'bold',
+                            color: 'black'
+                        },
+                        display: true,
+                    },
+                    // Enable the tooltip
+                    tooltip: {
+                        enabled: true,
+                    },
+                },
+            },
+        });
+        // Store the data in a database
+        pages.push({
+            MissCount: PageFaults,
+            HitCount: hit,
+            HitRatio: parseFloat((hit_ratio).toFixed(2)),
+            MissRatio: parseFloat((miss_ratio).toFixed(2))
+        });
+
+        // Post request to MysqlDATABASE code
+        fetch("/endpoint3", {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ pages }),//converts the "pages" array into a String 
+        })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+        // auto scroll down
+        window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth'
+        });
+
+    }
+</script>
+
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Preemptive Priority CPU Scheduling">
+    <meta name="author" content="Smit">
+	<title>Preemptive Priority CPU Scheduling</title>
+
+    <!-- font icons -->
+    <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
+
+    <!-- Bootstrap + Creative Studio main styles -->
+    <link rel="stylesheet" href="assets/css/creative-studio.css">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body style="background: linear-gradient(to right, #2133ff, #ff0051);
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+
+  <div data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+  <!-- Page Navigation -->
+  <nav class="navbar custom-navbar navbar-expand-lg navbar-dark" data-spy="affix" data-offset-top="20">
+      <div class="container">
+          <a class="navbar-brand" href="index.html">
+              <img src="assets/imgs/logo.png" alt="Logo image">
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav ml-auto">
+                  <li class="nav-item">
+                      <a class="nav-link" href="index.html">Home</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="simulation1.html">Simulate</a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+  </nav>
+  <!-- End Of Page Navigation -->
+</div>
+  <br><br><br>
+
+    <div class="container2">
+	<header>
+		<h1>Preemptive Priority CPU Scheduling</h1>
+	</header>
+	<main>
+        <h3>What is Preemptive Priority CPU Scheduling?</h3>
+        <p style="font-weight: bold;">Preemptive Priority CPU Scheduling Algorithm is a pre-emptive method of CPU scheduling algorithm that works based on the priority of a process. In this algorithm, the scheduler schedules the tasks to work as per the priority, which means that a higher priority process should be executed first. In case of any conflict, i.e., when there is more than one process with equal priorities, then the pre-emptive priority CPU scheduling algorithm works on the basis of FCFS (First Come First Serve) algorithm.</p>
+		
+		<h3>Advantages of Preemptive Priority CPU Scheduling</h3>
+        <ul>
+			<li>Efficient utilization of resources: Preemptive priority scheduling ensures that the most important tasks are executed first, which helps in efficient utilization of resources.</li>
+			<li>Faster response time: Higher priority tasks are given priority over lower priority tasks, which results in faster response times for important tasks.</li>
+			<li>Guaranteed service: Preemptive priority scheduling ensures that the high-priority tasks are always executed first, which provides guaranteed service for critical applications.</li>
+		</ul>
+		
+	
+		<h3>Disadvantages of Preemptive Priority Scheduling</h3>
+		<ul>
+			<li>Starvation: Preemptive priority scheduling can lead to starvation of lower priority tasks if higher priority tasks keep arriving. This can lead to poor performance of the system.</li>
+			<li>Priority inversion: Preemptive priority scheduling can also lead to priority inversion, where a lower priority task holds a resource required by a higher priority task, resulting in the higher priority task being blocked.</li>
+			<li>Complexity: Preemptive priority scheduling is a complex algorithm that requires careful implementation to ensure that the system operates as intended. This can increase the complexity of the operating system and make it more difficult to maintain.</li>
+		</ul>
+
+        <h3>Algorithm steps</h3>
+        <ul>
+            <li>Step-1: Select the first process whose arrival time will be 0, we need to select that process because that process is only executing at time t=0.</li>
+            <li>Step-2: Check the priority of the next available process. Here we need to check for 3 conditions. <br>
+                if priority(current_process) > priority(prior_process) :- then execute the current process. <br>
+                if priority(current_process) < priority(prior_process) :- then execute the prior process. <br>
+                if priority(current_process) = priority(prior_process) :- then execute the process which arrives first i.e., arrival time should be first.</li>
+            <li>Step-3: Repeat Step-2 until it reaches the final process.</li>
+            <li>Step-4: When it reaches the final process, choose the process which is having the highest priority & execute it. Repeat the same step until all processes complete their execution.</li>
+        </ul>
+            <!-- Button to go simulation1.html file -->
+    <center>
+            <button onclick="location.href='simulation1.html'" id="simulate">Simulate</button>
+        </center>
+	</main>
+    </div>
+
+    <!-- core  -->
+    <script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="assets/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+    <!-- bootstrap affix -->
+    <script src="assets/vendors/bootstrap/bootstrap.affix.js"></script>
+
+    <!-- Creative Studio js -->
+    <script src="assets/js/creative-studio.js"></script>
+</body>
+</html>

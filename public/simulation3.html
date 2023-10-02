@@ -1,0 +1,239 @@
+<!-- The following code is an HTML page that simulates a First-Come-First-Serve (FCFS) Disk Scheduling algorithm.-->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>FCFS Disk Scheduling Simulator</title>
+  <!-- Importing the Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="assets/css/css3.css">
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+  <link rel="stylesheet" href="assets/css/scrolltop.css">
+  <video autoplay loop muted id="background-video" style="margin: auto;">
+    <source src="assets/imgs/FCFS.mp4" type="video/mp4">
+  </video>
+</head>
+<body>
+  <div class="row">
+    <div class="col-md-6">
+        <!-- This is a button to go to the homepage -->
+        <button class="btn-primary" style="position: absolute; left: 25px; top: 10px;" >
+            <a href="index.html" style="color: #fff; font-weight: 500; ">Home</a>
+          </button>
+    </div>
+    <div class="col-md-6">
+        <!-- This is a button to go to the read page -->
+        <button class="btn-primary" style="position: absolute; right: 25px; top: 10px;">
+            <a href="fcfs.html" style="color: #fff; font-weight: 500; ">Read</a>
+          </button>
+    </div>
+  </div>
+	<div class="container">
+		<h1 class="text-center my-5 futuristic-title">FCFS Disk Scheduling Simulator</h1>
+    
+		<div class="inputs"><!-- This section contains input fields for entering the parameters required for the simulation. -->
+			<label for="initial-head-input">Enter the initial head position:</label>
+			<input type="number" id="initial-head-input" placeholder="Enter initial head position">
+			<label for="input_queue">Enter the disk request queue:</label>
+			<input type="text" id="input_queue" placeholder="Enter comma-separated values">
+			<button id="submit-btn" onclick="processQueue()">Simulate</button> <!--Simulate button-->
+		</div>
+		<div class="chart">
+			<div id="output"></div>
+			<div id="chart-container" style="display:none;">
+				<canvas id="chart"></canvas>
+			</div>
+		</div>
+	</div>
+    <!-- scroll top button -->
+    <div class="scroll-top-wrapper ">
+        <span class="scroll-top-inner">
+            <i class="fa fa-2x fa-arrow-circle-up"></i>
+        </span>
+    </div>
+    <script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="assets/js/scrolltop.js"></script>
+
+  <script>
+    function processQueue() {
+      // Get the input queue and initial head position, and split the queue into an array
+      const queueInput = document.getElementById('input_queue').value;
+      const initialHeadInput = parseInt(document.getElementById('initial-head-input').value);
+      //print the error message if any input values is empty
+      if (!queueInput || !initialHeadInput) {
+        alert('Please enter both the initial head position and the disk request queue.');
+        return;
+      }
+      else if(!Number.isInteger(initialHeadInput)) {
+        alert("Please enter valid Integer Initial Head Value");
+        return;
+      }
+      // check if the values entered in the queue are of integer type
+      for (let i = 0; i < queueInput.length; i++) {
+        if (isNaN(queueInput.charAt(i)) && (queueInput.charAt(i) !== ",")) {
+          alert("Please enter valid input values")
+          return;
+        }
+      }
+      const queue = queueInput.split(','); //queue which takes the values after splitting the numbers by "," from the input
+      const initialHeadPosition = parseFloat(document.getElementById('initial-head-input').value);
+      queue.unshift(initialHeadInput);
+
+      //requests array to store data about each request
+      let requests = [];
+      //coordinates array to store the coordinates of the points to be plotted
+      let coordinates = [];
+
+      // Initialize variables for total head movement and current head position
+      let totalHeadMovement = 0;
+      let currentHeadPosition = initialHeadPosition;
+
+      // Initialize arrays for chart data
+      let requestNumbers = [0];
+      let headPositions = [initialHeadPosition];
+
+      // Loop through the queue and calculate head movement and chart data
+      for (let i = 0; i < queue.length; i++) {
+        const request = parseFloat(queue[i]);
+        // totalHeadMovement += Math.abs(request - currentHeadPosition);
+        totalHeadMovement += Math.abs(parseFloat(request.toFixed(2)) - parseFloat(currentHeadPosition.toFixed(3)));
+
+        requests.push({   //pushing the request number the current head position and the head movement till the current head position in the requests array
+          RequestNumber: requestNumbers[i],
+          CurrentPosition: parseFloat(request.toFixed(2)),
+          HeadMovement: totalHeadMovement.toFixed(2)
+        });
+        coordinates.push({      //cordinates for the graph
+          x: parseFloat(request.toFixed(2)), y: requestNumbers[i]
+        });
+
+        currentHeadPosition = request;              //updating the current head position
+        requestNumbers.push(i + 1);                //pushing(updating number of requests)
+        headPositions.push(currentHeadPosition);  //pushing(updating) current head position
+      }
+      //fetch function to retreive data at endpoint2
+      fetch("/endpoint2", {  //This function sends a POST request to the "/endpoint2" endpoint with a JSON payload containing a "requests" object.
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({requests}), //converting requests to JSON string
+                }).then((response) => response.json())
+                .then((data) => {
+                    console.log('Success:', data);  //if success
+                })
+                .catch((error) => {
+                    console.error('Error:', error);  //if error
+                });
+
+      // Output the total seek time to the user
+      const outputDiv = document.getElementById('output');
+      outputDiv.innerHTML = 'Total Seek Time: ' + totalHeadMovement.toFixed(3);
+      outputDiv.appendChild(document.createElement('br'));
+      outputDiv.appendChild(document.createElement('br'));
+
+      // Show the "Show Graph" button
+      const showGraphBtn = document.createElement('button');
+      showGraphBtn.innerText = 'Show Graph';
+      outputDiv.appendChild(showGraphBtn);
+
+      showGraphBtn.addEventListener('click', function handleClick() {
+        // Create the chart canvas and set its propertie
+        const chartCanvas = document.createElement('canvas');
+        chartCanvas.appendChild(document.createElement('br'));
+        chartCanvas.width = Math.min(window.innerWidth, window.innerHeight);
+        chartCanvas.style.border = '1px solid black';
+        
+        // Append the canvas to the output div
+        outputDiv.appendChild(chartCanvas);
+
+        // Create a chart to display the head positions over request number
+        const chartData = {  //This part charData defines the data that will be displayed on the chart. In this case, it's a scatter plot with one dataset labeled "Request". The data points are stored in the coordinates array.
+          datasets: [{
+          label: 'Request',
+          data: coordinates,
+          fill: false,
+          backgroundColor: 'magenta',
+          borderColor: '#32cd32',
+          borderCapStyle: 'round',
+          color: 'red',
+          fontColor: 'black',
+          }]
+        };
+        const chartOptions = { //This code defines the options for the chart, such as the colors, font sizes, and axes labels.
+          showLine: true,
+          plugins: {
+            legend: {
+              labels: {
+                  color: 'black' // <-- change the text color of the label here
+              }
+            }
+          },
+          scales: {
+            x: {
+              position: 'top',
+              title: {
+                display: true,
+                text: 'Head Positions',
+                fontStyle: 'bold',
+                color: 'white'
+              },
+              ticks: {
+                color: 'white',
+                font: {
+                  //style: 'bold',
+                  size: 13
+                }
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Request Number',
+                fontStyle: 'bold',
+                color: 'white'
+              },
+              ticks: {
+                stepSize: 1,
+                color: 'white',
+                font: {
+                  //style: 'bold',
+                  size: 13
+                },
+                beginAtZero: true,
+                
+              },
+              reverse: true,
+            }
+          }
+        };
+        // adjust the font size of the chart's options
+        chartOptions.plugins.legend.labels.font = {
+          size: 15
+        };
+        chartOptions.scales.x.title.font = {
+          size: 15
+        };
+        chartOptions.scales.y.title.font = {
+          size: 15
+        };
+
+        const chart = new Chart(chartCanvas, { //This code creates a new Chart object using the data and options defined above and attaches it to the chartCanvas element.
+          type: 'scatter',
+          data: chartData,
+          options: chartOptions
+        });
+
+        showGraphBtn.removeEventListener('click', handleClick);
+      });
+      showGraphBtn.addEventListener('click', () =>{
+      //Auto scroll to show the graph 
+      window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+      );
+    }
+  </script>
+</body>
+</html>

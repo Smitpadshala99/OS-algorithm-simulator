@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peterson's Algorithm Simulation</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/css/css2.css">
+
+    <video autoplay loop muted id="background-video" style="margin: auto;">
+      <source src="assets/imgs/FCFS.mp4" type="video/mp4">
+    </video>
+  </head>
+  <body>
+    <div class="row">
+        <div class="col-md-6">
+            <!-- This is a button to go to the homepage -->
+            <button style="position: absolute; left: 25px; top: 10px;">
+                <a href="index.html" style="color: #fff; font-weight: 500; ">Home</a>
+            </button>
+        </div>
+        <div class="col-md-6">
+            <!-- This is a button to go to the read page -->
+            <button style="position: absolute; right: 25px; top: 10px;">
+                <a href="peterson.html" style="color: #fff; font-weight: 500; ">Read</a>
+            </button>
+        </div>
+    </div>  
+      <!-- This is a container with a title and buttons -->
+    <div class="container-fluid">
+        <h1 class="text-center my-5 futuristic-title" style="position: auto;">Peterson's Algorithm Simulation</h1>
+        <center>
+        <div>
+          <p id="error"></p>
+        </div>
+        </center>
+         <!-- This is a row with buttons to represent two processes and buttons to run/reset the simulation -->
+        <center>
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div id="remove0" class="card" style="width: 150px;">
+                        <button id="process0" class="btn btn-primary">Process 0</button>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div id="remove1" class="card" style="width: 150px;">
+                        <button id="process1" class="btn btn-primary">Process 1</button>
+                </div>
+            </div>
+            
+            <div id="run" class="col-md-6">
+              <div class="card" style="width: 100px;">
+                <!-- This is a button to run the simulation -->
+                      <button class="btn btn-primary" >Run</button>
+              </div>
+            </div>
+
+            <div id="reset" class="col-md-6">
+              <div class="card" style="width: 150px;">
+                <!-- This is a button to reset the simulation -->
+                      <button class="btn btn-primary" >Reset</button>
+              </div>
+            </div>
+          </div>
+        </center>
+        <!-- This is a row with three columns, each representing a section of the simulation -->
+        <div class="row my-5">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <!-- This is the entry section of the simulation -->
+                                <h5 id = "ready" class="card-title">Entry Section <br></h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <!-- This is the critical section of the simulation -->
+                                <h5 id = "CS" class="card-title">Critical Section <br></h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <!-- This is the exit section of the simulation -->
+                                <h5 id = "exit" class="card-title">Exit Section <br></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <center> 
+        <div class="my-5" style="width: fit-content; font-weight: bold">
+        <div class="turn">
+          <!-- This show the variable of process -->
+          <p id="turn_flags">turn: <span id="turn"></span> &emsp; flag[0]: <span id="flag0"></span> &emsp; flag[1]: <span id="flag1"></span></p>
+        </div>
+        </div>
+      </center>
+    </body>
+</html>
+  
+<script>
+    // Initialize turn and flag array
+    let turn = 0;
+    let flag = [false,false];
+    //Hide the reset button 1st
+    $("#reset").toggle();
+    // Add a click event listener to a button with the id "run"
+    $("#run").click(function(){
+      event.stopPropagation();
+      $("#turn").html(turn);    // Show the current turn value in the HTML element with the id "turn"
+      $("#flag0").html(`${flag[0]}`);   // Show the value of flag[0] in the HTML element with the id "flag0"
+      $("#flag1").html(`${flag[1]}`);   // Show the value of flag[1] in the HTML element with the id "flag1"
+      //Hide the run button and show the reset button
+      $("#run").hide();
+      $("#reset").toggle();
+      // disable run button after clicking
+      $(this).prop('disabled', true);
+
+      // Move process0 and process1 to the ready section
+      $("#process0").appendTo("#ready");
+      $("#process1").appendTo("#ready");
+      // Remove the extra space occupied by containers of p0 p1 buttons
+      $("#remove0").css("display","none");
+      $("#remove1").css("display","none");
+  
+      // Handle the click event on the process0 button
+      $("#process0").one('click',function(){  //try to move p0 in CS
+        if(enter_cs(0)==true){                //check is cs is free
+          $("#process0").appendTo("#CS");     //if yes move p0 to cs 
+          $("#process0").click(function(){    //when p0 is clicked again it moves to exit_section and p1 moves to cs
+            turn = 0;
+            flag[1] = true;
+            leave_cs(0);
+            $("#process0").appendTo("#exit");
+            $("#process1").appendTo("#CS");
+            $("#process1").click(function(){  // Handle the click event on the process1 button in the critical section 
+              leave_cs(1);
+              $("#process1").appendTo("#exit");
+              $("#process0").prop('disabled', true);
+              $("#process1").prop('disabled', true);
+            });
+          });
+        }
+      });
+
+      // Add a click event listener to process1 to move it to the critical section
+      $("#process1").one('click',function(){  //try to move p1 in CS
+        if(enter_cs(1)==true){                //check is cs is free
+          $("#process1").appendTo("#CS");     //if yes move p1 to cs 
+          $("#process1").click(function(){    //when p1 is clicked again it moves to exit_section and p0 moves to cs
+            turn = 1;
+            flag[0] = true;
+            leave_cs(1);
+            $("#process1").appendTo("#exit");
+            $("#process0").appendTo("#CS");
+            $("#process0").click(function(){  // Handle the click event on the process0 button in the critical section
+              leave_cs(0);
+              $("#process0").appendTo("#exit");
+              // Disable both buttons after process0 leaves the exit section
+              $("#process0").prop('disabled', true);
+              $("#process1").prop('disabled', true);
+            });
+          });
+        }
+      });
+    });
+    //Reload webpage when reset is clicked
+    $("#reset").click(function(){
+      window.location.reload()
+    });
+
+    // Function to check if any other process is already in CS
+    function enter_cs(processId){
+      flag[processId] = true;
+      turn = 1-processId;
+      $("#turn").html(turn);
+      $("#flag0").html(`${flag[0]}`);
+      $("#flag1").html(`${flag[1]}`);
+      if(flag[1-processId] && turn == 1-processId){
+        $("#error").html("Process"+(1-processId)+" already in CS.");
+        $("#error").css("color","yellow");
+        $("#error").css("fontSize","22px");
+        return false;
+      }
+      return true;
+    }
+    // Function to call when a process comes out of CS
+    function leave_cs(processId){
+      $("#error").html("");
+      flag[processId] = false;
+      $("#turn").html(turn);
+      $("#flag0").html(`${flag[0]}`);
+      $("#flag1").html(`${flag[1]}`);
+    }
+</script>

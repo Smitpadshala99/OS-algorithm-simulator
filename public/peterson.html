@@ -1,0 +1,105 @@
+<!-- The following code is an HTML file containing the markup and styles for a webpage read Peterson's Solution. -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Peterson's Solution">
+    <meta name="author" content="Smit">
+  	<title>Peterson's Solution</title>
+      <!-- font icons -->
+      <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
+
+      <!-- Bootstrap + Creative Studio main styles -->
+      <link rel="stylesheet" href="assets/css/creative-studio.css">
+      <!-- Custom style -->
+      <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <body style="background: linear-gradient(to right, #2133ff, #ff0051);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+  
+    <div data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+    <!-- Page Navigation -->
+    <nav class="navbar custom-navbar navbar-expand-lg navbar-dark" data-spy="affix" data-offset-top="20">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/imgs/logo.png" alt="Logo image">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span></span>
+            </button>
+            <!-- Links to the navigation bar -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="simulation2.html">Simulate</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End Of Page Navigation -->
+  </div>
+    <br><br><br>
+  
+    <!-- Main content of the webpage -->
+    <div class="container2">
+	<header>
+		<h1>Peterson's Solution</h1>
+	</header>
+	<main>
+		<h3>What is Peterson's Solution?</h3>
+    <p>Peterson's solution is a classic solution to the critical section problem. 
+      The critical section problem ensures that no two processes change or modify a resource's value simultaneously.</p>
+    <p>There are three sections except for the critical sections: the entry section,exit section, and the reminder section.
+      <br>
+      The process entering the critical region must pass the entry region in which they request entry to the critical section.
+      The process exiting the critical section must pass the exit region.
+      The remaining code left after execution is in the remainder section.
+      </p>
+
+		<h3>Advantages of Peterson's Solution</h3>
+		<ul>
+			<li>Simplicity: Peterson's solution is a simple algorithm that is easy to implement and understand. It does not require complex hardware or specialized software to work.</li>
+      <li>Efficiency: Peterson's solution is a lightweight algorithm that does not consume much system resources. It does not require busy waiting, which helps in saving CPU cycles.</li>
+      <li>Fairness: Peterson's solution provides fair access to the critical section. It ensures that every process gets a turn to enter the critical section and avoids starvation.</li>
+    </ul>
+		
+		<h3>Disadvantages of Peterson's Solution</h3>
+		<ul>
+      <li>Limited scalability: Peterson's solution is not scalable to a large number of processes. It is only suitable for small systems with a limited number of concurrent processes.</li>
+      <li>Busy waiting: Although Peterson's solution does not use busy waiting, it still involves a lot of spinning in a loop, which can waste CPU cycles.</li>
+      <li>Possibility of race conditions: Peterson's solution can lead to race conditions if not implemented correctly. This can cause synchronization problems and lead to unpredictable behavior in the system.</li>
+      <li>Limited to two processes: Peterson's solution can only be used for systems with two processes. It cannot be extended to support more than two processes.</li>
+    </ul>
+
+		<h3>Solution</h3>
+    <li>Peterson's solution provides a solution to the following problems,</li>
+    <li>It ensures that if a process is in the critical section, no other process must be allowed to enter it. This property is termed mutual exclusion.</li>
+    <li>If more than one process wants to enter the critical section, the process that should enter the critical region first must be established. This is termed progress.</li>
+    <li>There is a limit to the number of requests that processors can make to enter the critical region, provided that a process has already requested to enter and is waiting. This is termed bounding.</li>
+    <li>It provides platform neutrality as this solution is developed to run in user mode, which doesn't require any permission from the kernel.</li>
+                
+            <!-- Button to go simulation2.html file -->
+        <center>
+            <button onclick="location.href='simulation2.html'" id="simulate">Simulate</button>
+        </center>
+	</main>
+    </div>
+    <!-- core  -->
+    <script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="assets/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+    <!-- bootstrap affix -->
+    <script src="assets/vendors/bootstrap/bootstrap.affix.js"></script>
+
+    <!-- Creative Studio js -->
+    <script src="assets/js/creative-studio.js"></script>
+</body>
+</html>

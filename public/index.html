@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Preemptive Priority CPU Scheduling">
+    <meta name="author" content="Smit">
+    <title>OS Project</title>
+
+    <!-- font icons -->
+    <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Bootstrap + Creative Studio main styles -->
+    <link rel="stylesheet" href="assets/css/creative-studio.css">
+    <link rel="stylesheet" href="assets/css/scrolltop.css">
+
+    <!-- Chat Bot CSS -->
+    <link rel="stylesheet" href="assets/css/chat.css">
+    <!-- <link rel="stylesheet" href="assets/css/home.css"> -->
+
+</head>
+
+<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+
+    <!-- CHAT BAR BLOCK -->
+    <div class="chat-bar-collapsible">
+        <button id="chat-button" type="button" class="collapsible">
+            Chat with us!
+            <i id="chat-icon" style="color: #fff;" class="fa-sharp fa-regular fa-comments"></i>
+        </button>
+
+        <div class="content">
+            <div class="full-chat-block">
+                <!-- Message Container -->
+                <div class="outer-container">
+                    <div class="chat-container">
+                        <!-- Messages -->
+                        <div id="chatbox">
+                            <h5 id="chat-timestamp"></h5>
+                            <p id="botStarterMessage" class="botText"><span>Loading...</span></p>
+                        </div>
+
+                        <!-- User input box -->
+                        <div class="chat-bar-input-block">
+                            <div id="userInput">
+                                <input id="textInput" class="input-box" type="text" name="msg" placeholder="Tap 'Enter' to send a message">
+                                <p></p>
+                            </div>
+                            <div class="chat-bar-icons">
+                                <i id="chat-icon" style="color: crimson;" class="fa-solid fa-heart" onclick="heartButton()"></i>
+                                <i id="chat-icon" style="color: #333;" class="fa-sharp fa-solid fa-paper-plane" onclick="sendButton()"></i>
+                            </div>
+                        </div>
+
+                        <div id="chat-bar-bottom">
+                            <p></p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <!-- Page Navigation -->
+    <nav class="navbar custom-navbar navbar-expand-lg navbar-dark" data-spy="affix" data-offset-top="20">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="assets/imgs/logo.png" alt="Logo image">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#projects">Our Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#team">Team</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End Of Page Navigation -->
+
+    <!-- Page Header -->
+    <header class="header">
+        <div class="overlay">
+            <h5 class="subtitle">Small Team With Big Ideas</h5>
+            <h1 class="title">OS Projects</h1>
+            <div class="buttons text-center">
+                <a href="#about" class="btn btn-primary rounded w-lg btn-lg my-1">About</a>
+                <a href="#projects" class="btn btn-outline-light rounded w-lg btn-lg my-1">Our Projects</a>
+            </div>
+        </div>
+    </header>
+    <!-- End Of Page Header -->
+
+    <!-- scroll top button -->
+    <div class="scroll-top-wrapper ">
+        <span class="scroll-top-inner">
+            <i class="fa fa-2x fa-arrow-circle-up"></i>
+        </span>
+    </div>
+    
+    <!-- Box  -->
+    <!-- projects Section -->
+    <section id="projects">
+        <div class="container">
+            <h5 class="section-title text-center mb-6" style="color: black; font-weight: bold;">Our Projects</h5>
+            <div class="row">
+                <div class="col-sm-4 col-md-3">
+                    <div class="card mb-4">
+                        <center>
+                            <div class="card-body">
+                                <h2 class="mb-4"><i class="ti-bolt text-primary"></i></h2>
+                                <h6 class="box-title">Priority (Preemptive) CPU Scheduling Algorithm</h6><br>
+                                <a class="click" href="/priority.html">Read</a><br>
+                                <a class="click" href="/simulation1.html">Simulation</a>
+                            </div>
+                        </center>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-3">
+                    <div class="card mb-4">
+                        <center>
+                            <div class="card-body">
+                                <h2 class="mb-4"><i class="ti-palette text-primary"></i></h2>
+                                <h6 class="box-title" >Peterson's solution in Process Synchronization</h6><br>
+                                <a class="click" href="/peterson.html">Read</a><br>
+                                <a class="click" href="/simulation2.html">Simulation</a>
+                            </div>
+                        </center>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-3">
+                    <div class="card mb-4">
+                        <center>
+                            <div class="card-body">
+                                <h2 class="mb-4"><i class="ti-stats-up text-primary"></i></h2>
+                                <h6 class="box-title">First Come <br> First Serve <br> (FCFS)</h6><br>
+                                <a class="click" href="/fcfs.html">Read</a><br>
+                                <a class="click" href="/simulation3.html">Simulation</a>
+                            </div>
+                        </center>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-3">
+                    <div class="card mb-4">
+                        <center>
+                            <div class="card-body">
+                                <h2 class="mb-4"><i class="ti-location-arrow text-primary"></i></h2>
+                                <h6 class="box-title">Optimal Page Replacement Algorithm</h6><br>
+                                <a class="click" href="/optimal.html">Read</a><br>
+                                <a class="click" href="/simulation4.html">Simulation</a>
+                            </div>
+                        </center>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team">
+        <div class="container">
+            <h6 class="section-subtitle text-center">Meet</h6>
+            <h6 class="section-title mb-5 text-center">Our Team</h6>
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="card text-center mb-4">
+                        <img class="card-img-top inset" src="assets/imgs/nisarg.jpg">
+                        <div class="card-body-team">
+                            <h6 class="small text-primary font-weight-bold">Team Leader</h6>
+                            <h5 class="card-title">Nisarg Patel</h5>
+                            <p>21BCP191</p>
+                            <div class="socials">
+                                <a href="jhttps://www.linkedin.com/in"><i class="ti-linkedin"></i> </a>
+                                <a href="jhttps://github.com/"><i class="ti-github"></i></a>
+                                <a href="https://www.instagram.com/nisarg_908/"><i class="ti-instagram"></i></a>
+                                <a href="https://twitter.com/"><i class="ti-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="card text-center mb-4">
+                        <img class="card-img-top inset" src="assets/imgs/smit.jpg">
+                        <div class="card-body-team">
+                            <h6 class="small text-primary font-weight-bold">Web Designer</h6>
+                            <h5 class="card-title">Smit Padshala</h5>
+                            <p>21BCP187</p>
+                            <div class="socials">
+                                <a href="https://www.linkedin.com/in/smit-padshala-307575236"><i class="ti-linkedin"></i> </a>
+                                <a href="https://github.com/Smitpadshala99"><i class="ti-github"></i></a>
+                                <a href="https://www.instagram.com/smitpadshala_99/"><i class="ti-instagram"></i></a>
+                                <a href="https://twitter.com/smitpadshala99?t=1cxuCbQ4f4-oN9oXQkhqjA&s=08 "><i class="ti-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="card text-center mb-4">
+                        <img class="card-img-top inset" src="assets/imgs/tej.jpg">
+                        <div class="card-body-team">
+                            <h6 class="small text-primary font-weight-bold">Web Developer</h6>
+                            <h5 class="card-title">Tej Joshi</h5>
+                            <p>21BCP190</p>
+                            <div class="socials">
+                                <a href="https://www.linkedin.com/in"><i class="ti-linkedin"></i> </a>
+                                <a href="https://github.com/"><i class="ti-github"></i></a>
+                                <a href="jhttps://www.instagram.com/tej.joshi24/"><i class="ti-instagram"></i></a>
+                                <a href="https://twitter.com/"><i class="ti-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="card text-center mb-4">
+                        <img class="card-img-top inset" src="assets/imgs/tapan.jpg">
+                        <div class="card-body-team">
+                            <h6 class="small text-primary font-weight-bold">Web Designer</h6>
+                            <h5 class="card-title">Tapan Patel</h5>
+                            <p>21BCP192</p>
+                            <div class="socials">
+                                <a href="https://www.linkedin.com/in"><i class="ti-linkedin"></i> </a>
+                                <a href="https://github.com/"><i class="ti-github"></i></a>
+                                <a href="https://www.instagram.com/tapan.203/"><i class="ti-instagram"></i></a>
+                                <a href="https://twitter.com/TapanPatel2003"><i class="ti-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="card text-center mb-4">
+                        <img class="card-img-top inset" src="assets/imgs/shlok.jpg">
+                        <div class="card-body-team">
+                            <h6 class="small text-primary font-weight-bold">Web Developer</h6>
+                            <h5 class="card-title">Shlok Shanghvi</h5>
+                            <p>21BCP201</p>
+                            <div class="socials">
+                                <a href="https://www.linkedin.com/in"><i class="ti-linkedin"></i> </a>
+                                <a href="https://github.com/"><i class="ti-github"></i></a>
+                                <a href="https://www.instagram.com/_shlok_21103/"><i class="ti-instagram"></i></a>
+                                <a href="https://twitter.com/"><i class="ti-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="card text-center mb-4">
+                        <img class="card-img-top inset" src="assets/imgs/aditi.jpg">
+                        <div class="card-body-team">
+                            <h6 class="small text-primary font-weight-bold">Web Developer</h6>
+                            <h5 class="card-title">Aditi Mall</h5>
+                            <p>21BCP198</p>
+                            <div class="socials">
+                                <a href="https://www.linkedin.com/in"><i class="ti-linkedin"></i> </a>
+                                <a href="https://github.com/"><i class="ti-github"></i></a>
+                                <a href="https://www.instagram.com/mall.aditi/"><i class="ti-instagram"></i></a>
+                                <a href="jhttps://twitter.com/"><i class="ti-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- End of Team Sectoin -->
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-5 col-lg-4">
+                    <img src="assets/imgs/about.jpg"
+                        alt="Download free bootstrap 4 landing page, free boootstrap 4 templates, Download free bootstrap 4.1 landing page, free boootstrap 4.1.1 templates, Creative studio Landing page"
+                        class="w-100 img-thumbnail mb-3">
+                </div>
+                <div class="col-md-7 col-lg-8">
+                    <h6 class="section-subtitle mb-0">We Create</h6>
+                    <h6 class="section-title mb-3">Awesome Projects</h6>
+                    <p>We are the students of PDEU from Computer Science Engineering Division 3 Group 6.</p>
+                    <p>Thorough this website, we will be delivering you some OS projects like Preemptive Priority CPU
+                        Scheduling, Peterson's solution, First-Come-First-Serve (FCFS) disk scheduling algorithm and 
+                        optimal page replacement algorithm.</p>
+                    <p>We have also provided the simulation for the algorithm so that you can try it yourself
+                        and understand the concepts throughly and clearly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End of About Section -->
+</body>
+<!-- core  -->
+<script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
+<script src="assets/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+<!-- bootstrap affix -->
+<script src="assets/vendors/bootstrap/bootstrap.affix.js"></script>
+
+<!-- Creative Studio js -->
+<script src="assets/js/creative-studio.js"></script>
+<script src="assets/js/scrolltop.js"></script>
+
+<!--Script for chatBot-->
+<script src="assets/js/responses.js"></script>
+<script src="assets/js/chat.js"></script>
+</html>

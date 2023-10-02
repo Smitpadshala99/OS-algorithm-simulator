@@ -1,0 +1,90 @@
+  /* Global styling for all elements */
+  * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body style, including a linear gradient background and font family */
+body {
+  background: linear-gradient(to right, #2133ff, #ff0051);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Set smooth scrolling behavior for the page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Styling for the container holding the main content */
+.container2 {
+  max-width: 1200px;
+  margin: 35px auto;
+  background-color: rgba(230, 229, 229, 0.9);
+  border-radius: 10px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0px 0px 50px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Styling for the headings */
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #fff;
+  font-size: 36px;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px #000;
+}
+h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #fff;
+  font-size: 24px;
+  letter-spacing: 2px;
+  text-shadow: 1px 1px #000;
+}
+
+/* Styling for the paragraphs and list items */
+p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #000;
+  font-weight: bold;
+}
+
+ul {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #000;
+  list-style-type: disc;
+  padding-left: 30px;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+/* Styling for the button */
+#simulate {
+  background-color: #ff214f;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  margin-bottom: 20px;
+}
+
+
+/* Styling for the button hover state */
+#simulate:hover {
+  transform: scale(1.05);
+  background-color: #388e3c;
+}

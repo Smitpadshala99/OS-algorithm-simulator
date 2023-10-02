@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Optimal Page Replacement Algorithm">
+    <meta name="author" content="Smit">
+	<title>Optimal Page Replacement Algorithm</title>
+
+    <!-- font icons -->
+    <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
+
+    <!-- Bootstrap + Creative Studio main styles -->
+    <link rel="stylesheet" href="assets/css/creative-studio.css">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body style="background: linear-gradient(to right, #2133ff, #ff0051);
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+
+  <div data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+  <!-- Page Navigation -->
+  <nav class="navbar custom-navbar navbar-expand-lg navbar-dark" data-spy="affix" data-offset-top="20">
+      <div class="container">
+          <a class="navbar-brand" href="index.html">
+              <img src="assets/imgs/logo.png" alt="Logo image">
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav ml-auto">
+                  <li class="nav-item">
+                      <a class="nav-link" href="index.html">Home</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="simulation4.html">Simulate</a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+  </nav>
+  <!-- End Of Page Navigation -->
+</div>
+  <br><br><br>
+
+    <div class="container2">
+	<header>
+		<h1>Optimal Page Replacement Algorithm</h1>
+	</header>
+	<main>
+        <p style="font-weight: bold;">The Optimal Page Replacement Algorithm is a page replacement algorithm used in operating systems to manage the memory page frames of a process. It replaces the page in memory that will not be used for the longest period of time.</p>
+		
+		<h3>Advantages of Optimal Page Replacement Algorithm</h3>
+	<ul>
+		<li>It has the lowest page-fault rate of all algorithms.</li>
+		<li>It guarantees optimal performance, as it will always choose the page that will not be used for the longest time in the future.</li>
+	</ul>
+
+	<h3>Disadvantages of Optimal Page Replacement Algorithm</h3>
+	<ul>
+		<li>It is impossible to implement this algorithm in real-time operating systems, as it requires knowledge of the future memory access patterns of a process.</li>
+		<li>It is computationally expensive, as it requires scanning the entire future memory access sequence for each page fault.</li>
+	</ul>
+
+	<h3>Algorithm Steps</h3>
+	<ul>
+		<li>For each page reference in the memory access sequence, determine the set of pages that will be accessed in the future.</li>
+		<li>For each page that is currently in memory, determine the point in the future when it will be accessed again.</li>
+		<li>Choose the page that will not be accessed for the longest period of time in the future as the replacement page.</li>
+	</ul>
+    <!-- Button to go simulation4.html file -->
+    <center>
+            <button onclick="location.href='simulation4.html'" id="simulate">Simulate</button>
+        </center>
+	</main>
+    </div>
+
+    <!-- core  -->
+    <script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="assets/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+    <!-- bootstrap affix -->
+    <script src="assets/vendors/bootstrap/bootstrap.affix.js"></script>
+
+    <!-- Creative Studio js -->
+    <script src="assets/js/creative-studio.js"></script>
+</body>
+</html>
